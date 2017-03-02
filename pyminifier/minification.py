@@ -7,7 +7,7 @@ Module for minification functions.
 # Import built-in modules
 import re, tokenize, keyword
 try:
-    import cStringIO as io
+    import StringIO as io
 except ImportError: # We're using Python 3
     import io
 

@@ -66,7 +66,7 @@ something is broken.
 """
 
 # Import built-in modules
-import os, sys, re, io
+import os, sys, re, io, codecs
 from optparse import OptionParser
 from collections import Iterable
 
@@ -182,7 +182,7 @@ def pyminify(options, files):
     prepend = None
     if options.prepend:
         try:
-            prepend = open(options.prepend).read()
+            prepend = codecs.open(options.prepend, 'r', 'utf-8').read()
         except Exception as err:
             print("Error reading %s:" % options.prepend)
             print(err)
@@ -222,7 +222,7 @@ def pyminify(options, files):
             # Get the module name from the path
             module = os.path.split(sourcefile)[1]
             module = ".".join(module.split('.')[:-1])
-            source = open(sourcefile).read()
+            source = codecs.open(sourcefile, 'r', 'utf-8').read()
             tokens = token_utils.listified_tokenizer(source)
             if not options.nominify: # Perform minification
                 source = minification.minify(tokens, options)
@@ -258,7 +258,7 @@ def pyminify(options, files):
             # Need the path where the script lives for the next steps:
             filepath = os.path.split(sourcefile)[1]
             path = options.destdir + '/' + filepath # Put everything in destdir
-            f = open(path, 'w')
+            f = codecs.open(path, 'w', 'utf-8')
             f.write(result)
             f.close()
             new_filesize = os.path.getsize(path)
@@ -276,7 +276,7 @@ def pyminify(options, files):
         module = os.path.split(_file)[1]
         module = ".".join(module.split('.')[:-1])
         filesize = os.path.getsize(_file)
-        source = open(_file).read()
+        source = codecs.open(_file, 'r', 'utf-8').read()
         # Convert the tokens from a tuple of tuples to a list of lists so we can
         # update in-place.
         tokens = token_utils.listified_tokenizer(source)
@@ -309,7 +309,7 @@ def pyminify(options, files):
             "(https://github.com/liftoff/pyminifier)\n")
         # Either save the result to the output file or print it to stdout
         if options.outfile:
-            f = io.open(options.outfile, 'w', encoding='utf-8')
+            f = codecs.open(options.outfile, 'w', encoding='utf-8')
             f.write(result)
             f.close()
             new_filesize = os.path.getsize(options.outfile)
